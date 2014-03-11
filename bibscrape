@@ -1,0 +1,118 @@
+#!/bin/bash
+
+version="0.2"
+
+usage="Usage: $0 [options] JOURNAL VOLUME NUMBER"
+
+noclean=false
+verbose=false
+npositional=0
+root=`dirname $0`
+
+while [ $# -gt 0 ] ; do
+    case $1 in
+        -h|--help) 
+            cat << EOF
+$usage
+
+Options:
+
+    --noclean    Do not remove the temporary 'cite.out' file
+                 with the citation.
+    --journals   List available journals.
+    -v,--verbose Run verbosely
+    --help       Print this message.
+    --version    Print version information.
+
+Examples:
+
+    $0 prl 111 045301 >> bibliography.bib
+EOF
+            exit
+            ;;
+        --noclean)
+            noclean=true
+            ;;
+        --version)
+            echo $0 v$version
+            exit
+            ;;
+        --journals)
+            cat << EOF
+Abbreviation  Journal
+-----------   -------
+pra           Physical Review A
+prb           Physical Review B
+pre           Physical Review E
+prl           Physical Review L
+rmp           Review of Modern Physics
+pr            Physical Review
+jcp           Journal of Chemical Physics
+EOF
+            exit
+            ;;
+        -v|--verbose)
+            verbose=true
+            ;;
+        -*|--*)
+            echo "Unrecognnized option: $1"
+            echo "$0 --help for a list of options"
+            ;;
+        *)
+            case $npositional in
+                0)
+                    journal=$1
+                    ;;
+                1)
+                    volume=$1
+                    ;;
+                2)
+                    number=$1
+                    ;;
+                *)
+                    echo $usage
+                    exit
+                    ;;
+            esac
+            npositional=$((npositional+1))
+            ;;
+    esac
+    shift
+done
+
+if [ $npositional != 3 ] ; then
+    echo $usage
+    exit
+fi
+
+if $verbose ; then
+    echo "Journal: " $journal 1>&2
+    echo "Volume:  " $volume  1>&2
+    echo "Page;    " $number  1>&2
+fi
+
+case $journal in
+    pra|prb|prl|pre|pr)
+        $root/aps.sh $journal $volume $number
+        ;;
+    jcp)
+        $root/jcp.sh $volume $number
+        ;;
+    *)
+        echo "Journal must be one of: "
+        echo "pra, prb, pre, prl, rmp, pr or jcp"
+        exit
+esac
+
+if [ $? -ne 0 ] ; then
+    echo "Download failed."
+    exit
+fi
+
+tag=`python $root/build_tag.py cite.out`
+
+echo "New tag: " $tag 1>&2
+
+sed -e "s/@article{.*,/@article{$tag,/"  cite.out
+
+rm cite.out
