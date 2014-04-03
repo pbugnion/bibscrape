@@ -43,6 +43,7 @@ Abbreviation  Journal
 -----------   -------
 pra           Physical Review A
 prb           Physical Review B
+prc           Physical Review C
 pre           Physical Review E
 prl           Physical Review L
 rmp           Review of Modern Physics
@@ -92,15 +93,15 @@ if $verbose ; then
 fi
 
 case $journal in
-    pra|prb|prl|pre|pr)
+    pra|prb|prl|pre|pr|prc|rmp)
         $root/aps.sh $journal $volume $number
         ;;
     jcp)
         $root/jcp.sh $volume $number
         ;;
     *)
-        echo "Journal must be one of: "
-        echo "pra, prb, pre, prl, rmp, pr or jcp"
+        echo "Journal must be one of: " 1>&2
+        echo "pra, prb, pre, prl, rmp, pr or jcp" 1>&2
         exit
 esac
 

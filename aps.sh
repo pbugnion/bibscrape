@@ -15,6 +15,8 @@ if [ $journal = "pra" ] ; then
     full_name=PhysRevA
 elif [ $journal = "prb" ] ; then
     full_name=PhysRevB
+elif [ $journal = "prc" ] ; then
+    full_name=PhysRevC
 elif [ $journal = "prl" ] ; then
     full_name=PhysRevLett
 elif [ $journal = "pre" ] ; then
@@ -26,7 +28,7 @@ elif [ $journal = "rmp" ] ; then
     full_name="RevModPhys"
 else
     echo "Journal must be one of: "
-    echo "pra, prb, pre, prl, rmp or pr"
+    echo "pra, prb, prc, pre, prl, rmp or pr"
     exit
 fi
 
