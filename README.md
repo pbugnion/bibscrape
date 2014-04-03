@@ -32,6 +32,19 @@ Requirements
 
 An internet connection and a Python 2.x installation.
 
+Installation instructions
+-------------------------
+
+Download the source code using 
+
+    $ git clone https://github.com/pbugnion/bibscrape $DIR
+
+where $DIR should be the directory where you want  `bibscrape` to live. Then add 
+
+    export PATH=$PATH:/path/to/$DIR/from/home/directory
+
+to your `.bashrc` file (you will need to create a `.bashrc` file in your home
+directory if you don't have one).
 
 Acknowledgements
 ----------------
