@@ -38,3 +38,5 @@ if [ $? -ne 0 ] ; then
     echo "Download failed."
     exit 2
 fi
+
+echo "" >> cite.out

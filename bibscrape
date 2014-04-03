@@ -136,6 +136,5 @@ fi
 echo "New tag: " $tag 1>&2
 
 sed -e "s/@article{.*,/@article{$tag,/"  cite.out
-echo ""
 
 rm cite.out

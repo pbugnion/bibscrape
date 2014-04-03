@@ -25,3 +25,4 @@ url=scitation.aip.org$doi_link/cite/bibtex
 wget $url
 
 mv bibtex cite.out
+rm tmp.htm
