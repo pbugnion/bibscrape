@@ -6,6 +6,7 @@ usage="Usage: $0 [options] JOURNAL VOLUME NUMBER"
 
 noclean=false
 verbose=false
+has_tag=false
 npositional=0
 root=`dirname $0`
 
@@ -18,7 +19,9 @@ $usage
 Options:
 
     --noclean    Do not remove the temporary 'cite.out' file
-                 with the citation.
+                 with the downloaded citation.
+    --tag=TAG    Use TAG as the post-processing citation tag, rather
+                 than trying to auto-generate it.
     --journals   List available journals.
     -v,--verbose Run verbosely
     --help       Print this message.
@@ -27,6 +30,8 @@ Options:
 Examples:
 
     $0 prl 111 045301 >> bibliography.bib
+
+    $0 --tag=Bugnion2013 prl 111 045301 >> bibliography.bib
 EOF
             exit
             ;;
@@ -36,6 +41,15 @@ EOF
         --version)
             echo $0 v$version
             exit
+            ;;
+        --tag=*)
+            has_tag=true
+            tag=${1#--tag=}
+            ;;
+        --tag)
+            shift
+            has_tag=true
+            tag=$1
             ;;
         --journals)
             cat << EOF
@@ -89,7 +103,12 @@ fi
 if $verbose ; then
     echo "Journal: " $journal 1>&2
     echo "Volume:  " $volume  1>&2
-    echo "Page;    " $number  1>&2
+    echo "Page:    " $number  1>&2
+    if $has_tag ; then
+        echo "Tag:     " $tag 1>&2
+    else
+        echo "Tag:    auto" 1>&2
+    fi
 fi
 
 case $journal in
@@ -106,14 +125,17 @@ case $journal in
 esac
 
 if [ $? -ne 0 ] ; then
-    echo "Download failed."
+    echo "Download failed." 1>&2
     exit
 fi
 
-tag=`python $root/build_tag.py cite.out`
+if ! $has_tag ; then
+    tag=`python $root/build_tag.py cite.out`
+fi
 
 echo "New tag: " $tag 1>&2
 
 sed -e "s/@article{.*,/@article{$tag,/"  cite.out
+echo ""
 
 rm cite.out
