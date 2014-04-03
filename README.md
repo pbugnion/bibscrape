@@ -1,5 +1,6 @@
 
-# BIBSCRAPE
+BIBSCRAPE
+=========
 
 Bibscrape is a lightweight web scraper for fetching bibtex citations from journals:
 
@@ -25,3 +26,16 @@ of Chemical Physics. Adding further journals depends on how accessible they
 make their bibtex export functions.
 
 A help menu is available with ``$ bibscrape --help``.
+
+Requirements
+------------
+
+An internet connection and a Python 2.x installation.
+
+
+Acknowledgements
+----------------
+
+This code relies extensively on Francois Boulogne's
+[bibtexparser](https://github.com/sciunto/python-bibtexparser) python library
+(licensed under the LGPL).
